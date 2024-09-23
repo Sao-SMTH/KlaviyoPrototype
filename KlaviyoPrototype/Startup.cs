@@ -31,7 +31,7 @@ namespace KlaviyoPrototype
         {
 
             services.AddControllers();
-            services.AddScoped(typeof(IEmailService), typeof(EmailService));
+            services.AddSingleton(typeof(IEmailService), typeof(EmailService));
             services.AddSwaggerGen();
         }
 
