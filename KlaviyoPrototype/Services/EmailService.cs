@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using KlaviyoPrototype.DTO;
 using KlaviyoPrototype.Interface;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ namespace KlaviyoPrototype.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<bool> SendEventAsync(string eventName, string email, object properties)
+        public async Task<bool> SendEventAsync(string eventName, string email, CustomFieldDTO properties)
         {
             var url = $"https://a.klaviyo.com/api/track?data={GetEncodedData(eventName, email, properties)}";
             var response = await _httpClient.GetAsync(url);
@@ -35,7 +36,7 @@ namespace KlaviyoPrototype.Services
             }
             return true;
         }
-        private string GetEncodedData(string eventName, string email, object properties)
+        private string GetEncodedData(string eventName, string email, CustomFieldDTO properties)
         {
             var data = new
             {
