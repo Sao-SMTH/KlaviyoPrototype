@@ -16,10 +16,20 @@ The primary controller in this project is the `EmailController`, which accepts e
 
 ## Project Structure
 
-KlaviyoPrototype/ │ ├── Controllers/ │ └── EmailController.cs # Contains the main logic for sending email events. │ ├── Interface/ │ └── IEmailService.cs # Interface for the email service. │ ├── Services/ │ └── EmailService.cs # Contains the logic for interacting with the Klaviyo API. │ └── Program.cs # Entry point for the application.
-
-bash
-
+```
+KlaviyoPrototype/
+│
+├── Controllers/
+│   └── EmailController.cs  # Contains the main logic for sending email events.
+│
+├── Interface/
+│   └── IEmailService.cs    # Interface for the email service.
+│
+├── Services/
+│   └── EmailService.cs     # Contains the logic for interacting with the Klaviyo API.
+│
+└── Program.cs              # Entry point for the application.
+```
 
 ## Installation & Setup
 
@@ -27,122 +37,121 @@ bash
    ```bash
    git clone https://github.com/your-repo/klaviyo-custom-field-prototype.git
    cd klaviyo-custom-field-prototype
+   ```
 
-    Configure Klaviyo API Key: Open the EmailService.cs file and replace the placeholder with your Klaviyo API key.
+2. **Configure Klaviyo API Key**:
+   Open the `EmailService.cs` file and replace the placeholder with your Klaviyo API key.
 
-    Build the Project:
+3. **Build the Project**:
+   ```bash
+   dotnet build
+   ```
 
-    bash
+4. **Run the Application**:
+   ```bash
+   dotnet run
+   ```
 
-dotnet build
+   This will launch the ASP.NET Core API on the default port (typically `http://localhost:5000`).
 
-Run the Application:
+## API Endpoints
 
-bash
+### POST `/api/email/send`
+Sends an email event to Klaviyo with the specified customer details and order information.
 
-    dotnet run
+#### Request Parameters:
+- **email** *(string)*: The recipient's email address.
 
-    This will launch the ASP.NET Core API on the default port (typically http://localhost:5000).
-
-API Endpoints
-POST /api/email/send
-
-Sends an email event to Klaviyo with an order_id, customer_name, and other custom fields.
-Request Body:
-
-json
-
-{
-  "Email": "test@example.com",
-  "FirstName": "James",
-  "LastName": "Bond",
-  "AnimatedLogo": "logo_url",
-  "OrderNumber": 12345,
-  "DeliveryAddress": "123 Bond St.",
-  "PaymentType": "Credit Card",
-  "DateOfOrder": "2024-09-24",
-  "DeliveryMethod": "Standard",
-  "Coins": 100,
-  "ItemList": [
-    {"Price": 59.99, "Name": "item1"},
-    {"Price": 39.99, "Name": "item2"}
-  ]
-}
-
-Example Request:
-
-http
-
+#### Example Request:
+```http
 POST /api/email/send
 Content-Type: application/json
 
 {
-  "Email": "test@example.com",
-  "FirstName": "James",
-  "LastName": "Bond",
-  "AnimatedLogo": "logo_url",
-  "OrderNumber": 12345,
-  "DeliveryAddress": "123 Bond St.",
+  "Email": "sao@smthgoodco.com",
+  "FirstName": "Sao Bran",
+  "LastName": "Aung",
+  "AnimatedLogo": "https://example.com/logo.gif",
+  "OrderNumber": "ORD123456789",
+  "DeliveryAddress": "123 Main St, Springfield, IL",
   "PaymentType": "Credit Card",
-  "DateOfOrder": "2024-09-24",
-  "DeliveryMethod": "Standard",
-  "Coins": 100,
+  "DateOfOrder": "09/24/2024",
+  "DeliveryMethod": "Standard Shipping",
+  "Coins": "1000",
   "ItemList": [
-    {"Price": 59.99, "Name": "item1"},
-    {"Price": 39.99, "Name": "item2"}
+    {
+      "ProductName": "Smartphone",
+      "Quantity": 1,
+      "Price": 699.99,
+      "Currency": "USD"
+    },
+    {
+      "ProductName": "Headphones",
+      "Quantity": 2,
+      "Price": 99.99,
+      "Currency": "USD"
+    }
   ]
 }
+```
 
-Example Response:
-
-json
-
+#### Example Response:
+```json
 {
   "message": "Email event sent!"
 }
+```
 
-Example Custom Fields Sent to Klaviyo
-
-json
-
+### Example Custom Fields Sent to Klaviyo
+```json
 {
-  "order_id": 12345,
-  "value": 99.98,
-  "Email": "test@example.com",
-  "FirstName": "James",
-  "LastName": "Bond",
-  "AnimatedLogo": "logo_url",
-  "DeliveryAddress": "123 Bond St.",
+  "Email": "sao@smthgoodco.com",
+  "FirstName": "Sao Bran",
+  "LastName": "Aung",
+  "AnimatedLogo": "https://example.com/logo.gif",
+  "OrderNumber": "ORD123456789",
+  "DeliveryAddress": "123 Main St, Springfield, IL",
   "PaymentType": "Credit Card",
-  "DateOfOrder": "2024-09-24",
-  "DeliveryMethod": "Standard",
-  "Coins": 100,
+  "DateOfOrder": "09/24/2024",
+  "DeliveryMethod": "Standard Shipping",
+  "Coins": "1000",
   "ItemList": [
-    {"Price": 59.99, "Name": "item1"},
-    {"Price": 39.99, "Name": "item2"}
+    {
+      "ProductName": "Smartphone",
+      "Quantity": 1,
+      "Price": 699.99,
+      "Currency": "USD"
+    },
+    {
+      "ProductName": "Headphones",
+      "Quantity": 2,
+      "Price": 99.99,
+      "Currency": "USD"
+    }
   ]
 }
+```
 
-Customization
+## Customization
+You can modify the event name, custom fields, and other properties within the `SendEmail` method in the `EmailController.cs` file.
 
-You can modify the event name, custom fields, and other properties within the SendEmail method in the EmailController.cs file.
-
-csharp
-
+```csharp
 var eventName = "order_placed";  // Change to your desired event name
+```
 
-Feel free to update the properties object to include additional fields relevant to your application.
-Dependencies
+Feel free to update the `properties` object to include additional fields relevant to your application.
 
-    ASP.NET Core 5: Web framework for building the API.
-    Klaviyo: Integration with the Klaviyo Track API.
+## Dependencies
+- **ASP.NET Core 5**: Web framework for building the API.
+- **Klaviyo**: Integration with the Klaviyo Track API.
 
-Contribution
-
+## Contribution
 Feel free to contribute by opening issues or submitting pull requests. Make sure to follow best practices and guidelines.
-License
 
+## License
 This project is licensed under the MIT License.
-Contact
 
+---
+
+## Contact
 For any issues or support, please contact Sak Bran or open an issue in the repository.
