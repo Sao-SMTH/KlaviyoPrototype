@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        h1,
+        h2 {
+            color: #333333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        p {
+            color: #555555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #999999;
+            text-align: center;
+        }
+
+        /* Order Info Section */
+        .order-info {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .order-info div {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+
+        .order-info div span {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        /* Table Section */
+        .table-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            font-size: 16px;
+            color: #333333;
+            background-color: #f3f3f3;
+        }
+
+        td {
+            font-size: 14px;
+            color: #555555;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="email-container">
+        <!-- Celebration Header -->
+        <h1>We are celebrating your first order with us!</h1>
+
+        <p>Hugs from Smthgood, <span class="highlight">{{ event.FirstName | default:'' }}</span></p>
+
+        <p>We are so thrilled with your Smthgood order. Your first order has been confirmed, and to celebrate, we are
+            gifting you <span class="highlight">double Smthgood Coins</span>! We will send you another email when your
+            order is shipped. You can also check your order status anytime in the app. We cannot wait for you to enjoy
+            your first order!</p>
+
+        <p>{{ event.AnimatedLogo | default:'' }}</p>
+
+        <p>xoxo,<br> Stella</p>
+
+        <!-- Order Details Section -->
+        <h2>Your Order</h2>
+
+        <div class="order-info">
+            <div><span>Order number:</span> {{ event.OrderNumber | default:'' }}</div>
+            <div><span>Date of order:</span> {{ event.DateOfOrder | default:'' }}</div>
+            <div><span>Delivery Address:</span> {{ event.DeliveryAddress | default:'' }}</div>
+            <div><span>Delivery method:</span> {{ event.DeliveryMethod | default:'' }}</div>
+            <div><span>Payment Type:</span> {{ event.PaymentType | default:'' }}</div>
+            <div><span>Smthgood coins earned:</span> {{ event.Coins | default:'' }}</div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Item Price*</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in event.ItemList %}
+                    <tr>
+                        <td>{{ item.ProductName | default:'' }}</td>
+                        <td>{{ item.Quantity | default:'' }}</td>
+                        <td>{{ item.Price | default:'' }} {{ item.Currency | default:'' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="note">*If applicable, your local currency is for display purposes only and is calculated based on
+                exchange rates that are updated daily.</p>
+        </div>
+
+        <!-- Optional CTA Button -->
+        <a href="#" class="button">Check Your Order Status</a>
+
+        <div class="footer">
+            <p>www.smthgoodco.com</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

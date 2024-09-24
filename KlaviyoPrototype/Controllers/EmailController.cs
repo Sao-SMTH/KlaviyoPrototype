@@ -21,22 +21,29 @@ namespace KlaviyoPrototype.Controllers
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> SendEmail(string email)
+        public async Task<IActionResult> SendEmail(KlaviyoEmailDTO data)
         {
             var eventName = "order_placed";
-            Random random = new Random();
-
-            // Generate a random integer
-            int randomNumber = random.Next();
             var properties = new
             {
-                order_id = randomNumber,
-                value = Convert.ToInt32(randomNumber),
-                customer_name = "James Bond" + randomNumber, // Custom field
-                order_items = new[] { "item1-" + randomNumber, "item2-" + randomNumber } // Another custom field
+                order_id = data.OrderNumber,
+                value = data.ItemList.Sum(x => x.Price),
+                #region CustomFields
+                data.Email,
+                data.FirstName,
+                data.LastName,
+                data.AnimatedLogo,
+                data.OrderNumber,
+                data.DeliveryAddress,
+                data.PaymentType,
+                data.DateOfOrder,
+                data.DeliveryMethod,
+                data.Coins,
+                data.ItemList,
+                #endregion
             };
 
-            await _klaviyoService.SendEventAsync(eventName, email, properties);
+            await _klaviyoService.SendEventAsync(eventName, data.Email, properties);
 
             return Ok(new { message = "Email event sent!" });
         }
