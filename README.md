@@ -1,46 +1,41 @@
 # Klaviyo Custom Field Testing - README
 
 ## Overview
-This project is a prototype API for sending custom field data to Klaviyo using its Track API, built on **ASP.NET Core 5**. It allows you to send custom events such as `order_placed`, along with user-specific properties, to Klaviyo for tracking and analytics.
-
-The primary controller in this project is the `EmailController`, which accepts email addresses and sends custom event data to Klaviyo.
+This project is a simple API for sending custom field data to Klaviyo using its Track API, built on **ASP.NET Core 5**. It allows you to send events like `order_placed`, along with user-specific properties, to Klaviyo for tracking and analytics.
 
 ## Key Features
-- **Custom Event Tracking**: Sends an event (`order_placed`) to Klaviyo with custom fields like `order_id`, `customer_name`, and `order_items`.
-- **ASP.NET Core 5**: This project is developed using **ASP.NET Core 5**.
+- **Custom Event Tracking**: Sends events (`order_placed`) with fields like `order_id`, `customer_name`, and `order_items`.
+- **ASP.NET Core 5**: Developed using **ASP.NET Core 5**.
 - **Klaviyo API Integration**: Utilizes a custom service (`IEmailService`) to interact with Klaviyo's Track API.
 
 ## Prerequisites
-- **Klaviyo API Key**: You will need a valid Klaviyo API key to make API requests.
+- **Klaviyo API Key**: You will need a valid Klaviyo API key for API requests.
 - **ASP.NET Core 5 SDK**: Ensure that the .NET 5 SDK is installed on your machine.
 
 ## Project Structure
-
 ```
 KlaviyoPrototype/
 │
 ├── Controllers/
-│   └── EmailController.cs  # Contains the main logic for sending email events.
+│   └── EmailController.cs  # Contains the logic for sending email events.
 │
 ├── Interface/
 │   └── IEmailService.cs    # Interface for the email service.
 │
 ├── Services/
-│   └── EmailService.cs     # Contains the logic for interacting with the Klaviyo API.
+│   └── EmailService.cs     # Logic for interacting with the Klaviyo API.
 │
 └── Program.cs              # Entry point for the application.
 ```
 
 ## Installation & Setup
-
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/your-repo/klaviyo-custom-field-prototype.git
    cd klaviyo-custom-field-prototype
    ```
 
-2. **Configure Klaviyo API Key**:
-   Open the `EmailService.cs` file and replace the placeholder with your Klaviyo API key.
+2. **Configure Klaviyo API Key**: Open the `EmailService.cs` file and replace the placeholder with your Klaviyo API key.
 
 3. **Build the Project**:
    ```bash
@@ -54,43 +49,46 @@ KlaviyoPrototype/
 
    This will launch the ASP.NET Core API on the default port (typically `http://localhost:5000`).
 
-## API Endpoints
+## Setting Up Klaviyo
+
+### Create a Flow
+1. **Log into Klaviyo**: Go to your Klaviyo account.
+2. **Navigate to Flows**: Click on the "Flows" tab in the sidebar.
+3. **Create a New Flow**: Click "Create Flow" and choose "Create from Scratch."
+4. **Add a Trigger**: Select "Metric Trigger" and choose the event you want to track (e.g., `order_placed`).
+5. **Configure the Flow**: Add actions like sending an email after the trigger.
+
+### Create an Email Template
+1. **Go to Templates**: Click on the "Email Templates" tab.
+2. **Create a New Template**: Click "Create Template" and select a layout or start from scratch.
+3. **Design Your Email**: Use the drag-and-drop editor to customize your email content.
+4. **Save Your Template**: Once satisfied, save the template for use in your flow.
+
+### Email HTML Template
+An HTML email template is included in the project folder as `emailBody.html`. You can customize it for order confirmations.
+
+## API Endpoint
 
 ### POST `/api/email/send`
-Sends an email event to Klaviyo with the specified customer details and order information.
+Use this endpoint to send customer details.
 
 #### Request Parameters:
-- **email** *(string)*: The recipient's email address.
+- **Email** *(string)*: The recipient's email address.
+- **FirstName** *(string)*: Customer's first name.
+- **LastName** *(string)*: Customer's last name.
+- **OrderNumber** *(string)*: Unique order identifier.
+- **ItemList** *(array)*: List of items ordered with details.
 
 #### Example Request:
-```http
-POST /api/email/send
-Content-Type: application/json
-
+```json
 {
   "Email": "sao@smthgoodco.com",
   "FirstName": "Sao Bran",
   "LastName": "Aung",
-  "AnimatedLogo": "https://example.com/logo.gif",
   "OrderNumber": "ORD123456789",
-  "DeliveryAddress": "123 Main St, Springfield, IL",
-  "PaymentType": "Credit Card",
-  "DateOfOrder": "09/24/2024",
-  "DeliveryMethod": "Standard Shipping",
-  "Coins": "1000",
   "ItemList": [
-    {
-      "ProductName": "Smartphone",
-      "Quantity": 1,
-      "Price": 699.99,
-      "Currency": "USD"
-    },
-    {
-      "ProductName": "Headphones",
-      "Quantity": 2,
-      "Price": 99.99,
-      "Currency": "USD"
-    }
+    {"ProductName": "Smartphone", "Quantity": 1, "Price": 699.99},
+    {"ProductName": "Headphones", "Quantity": 2, "Price": 99.99}
   ]
 }
 ```
@@ -102,56 +100,14 @@ Content-Type: application/json
 }
 ```
 
-### Example Custom Fields Sent to Klaviyo
-```json
-{
-  "Email": "sao@smthgoodco.com",
-  "FirstName": "Sao Bran",
-  "LastName": "Aung",
-  "AnimatedLogo": "https://example.com/logo.gif",
-  "OrderNumber": "ORD123456789",
-  "DeliveryAddress": "123 Main St, Springfield, IL",
-  "PaymentType": "Credit Card",
-  "DateOfOrder": "09/24/2024",
-  "DeliveryMethod": "Standard Shipping",
-  "Coins": "1000",
-  "ItemList": [
-    {
-      "ProductName": "Smartphone",
-      "Quantity": 1,
-      "Price": 699.99,
-      "Currency": "USD"
-    },
-    {
-      "ProductName": "Headphones",
-      "Quantity": 2,
-      "Price": 99.99,
-      "Currency": "USD"
-    }
-  ]
-}
-```
-
 ## Customization
-You can modify the event name, custom fields, and other properties within the `SendEmail` method in the `EmailController.cs` file.
-
-```csharp
-var eventName = "order_placed";  // Change to your desired event name
-```
-
-Feel free to update the `properties` object to include additional fields relevant to your application.
-
-## Dependencies
-- **ASP.NET Core 5**: Web framework for building the API.
-- **Klaviyo**: Integration with the Klaviyo Track API.
+You can change the event name and fields in the `EmailController.cs` file.
 
 ## Contribution
-Feel free to contribute by opening issues or submitting pull requests. Make sure to follow best practices and guidelines.
+Feel free to contribute by submitting issues or pull requests.
 
 ## License
 This project is licensed under the MIT License.
 
----
-
 ## Contact
-For any issues or support, please contact Sak Bran or open an issue in the repository.
+For support, please reach out to Sak Bran or open an issue in the repository.
